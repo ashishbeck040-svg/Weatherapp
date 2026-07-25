@@ -1,0 +1,310 @@
+/* =========================================================
+   DESIGN TOKENS
+   Theme: "Vision Lab" — a specimen scanner / lab readout.
+   Pale cool paper background, ink-navy text, teal for the
+   active/scanning state, coral for the top-ranked match.
+========================================================= */
+:root {
+  --paper: #eef1f6;
+  --panel: #ffffff;
+  --ink: #1b2430;
+  --ink-dim: #6b7488;
+  --line: #d7dce6;
+  --teal: #1f9e8a;
+  --teal-dim: #bfe6df;
+  --coral: #e2673f;
+
+  --font-display: "Space Grotesk", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+  --font-body: "Work Sans", sans-serif;
+
+  --radius: 16px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+}
+
+/* ===================== HEADER ===================== */
+.topbar {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 32px 20px 8px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.brand-mark { color: var(--teal); }
+
+.tagline {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-dim);
+  margin: 4px 0 0 30px;
+  letter-spacing: 0.02em;
+}
+
+/* ===================== TABS ===================== */
+.lab {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 18px;
+}
+
+.tab {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--ink-dim);
+  padding: 8px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tab.active {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+/* ===================== LAYOUT GRID ===================== */
+.lab-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 760px) {
+  .lab-grid { grid-template-columns: 1fr; }
+}
+
+/* ===================== VIEWFINDER ===================== */
+.viewfinder {
+  position: relative;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Corner brackets give it a "viewfinder / scanner" identity */
+.corner {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--teal);
+  opacity: 0.7;
+  z-index: 2;
+  pointer-events: none;
+}
+.corner.tl { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+.corner.tr { top: 10px; right: 10px; border-left: none; border-bottom: none; }
+.corner.bl { bottom: 10px; left: 10px; border-right: none; border-top: none; }
+.corner.br { bottom: 10px; right: 10px; border-left: none; border-top: none; }
+
+/* The signature scanning animation — sweeps down while classifying */
+.scan-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--teal), transparent);
+  box-shadow: 0 0 12px 2px var(--teal);
+  opacity: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.scan-line.active {
+  opacity: 1;
+  animation: sweep 1.1s ease-in-out infinite;
+}
+
+@keyframes sweep {
+  0%   { top: 4%; }
+  50%  { top: 94%; }
+  100% { top: 4%; }
+}
+
+.panel {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hidden { display: none !important; }
+
+.preview {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+#webcamVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---------- Dropzone ---------- */
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink-dim);
+  cursor: pointer;
+  padding: 20px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.dropzone.dragover {
+  color: var(--teal);
+}
+
+/* ===================== READOUT PANEL ===================== */
+.readout {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.readout-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-dim);
+  margin: 0 0 12px;
+}
+
+.status {
+  font-size: 14px;
+  color: var(--ink-dim);
+  min-height: 20px;
+}
+
+.status.error { color: var(--coral); }
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin: 12px 0 20px;
+}
+
+.btn {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn.primary {
+  background: var(--teal);
+  color: #fff;
+}
+
+.btn.primary:disabled {
+  background: var(--line);
+  color: var(--ink-dim);
+  cursor: not-allowed;
+}
+
+.btn.ghost {
+  background: transparent;
+  border-color: var(--line);
+  color: var(--ink);
+}
+
+/* ---------- Results list (numbered — order = confidence rank) ---------- */
+.results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.result {
+  display: grid;
+  grid-template-columns: 22px 1fr 52px;
+  align-items: center;
+  gap: 10px;
+}
+
+.result-index {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-dim);
+}
+
+.result-main .result-label {
+  font-size: 14px;
+  margin-bottom: 5px;
+  text-transform: capitalize;
+}
+
+.result:first-child .result-label {
+  color: var(--coral);
+  font-weight: 500;
+}
+
+.bar-track {
+  height: 5px;
+  background: var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background: var(--teal);
+  border-radius: 999px;
+}
+
+.result:first-child .bar-fill {
+  background: var(--coral);
+}
+
+.result-pct {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-align: right;
+  color: var(--ink-dim);
+}
